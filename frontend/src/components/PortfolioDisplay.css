@@ -1,0 +1,78 @@
+.portfolio-display {
+  margin-bottom: 30px;
+}
+
+.portfolio-display h2 {
+  margin: 0 0 24px 0;
+  color: #333;
+  font-size: 1.8em;
+}
+
+.portfolio-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.chart-container {
+  min-height: 300px;
+}
+
+.allocation-details h3 {
+  margin: 0 0 16px 0;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.allocation-list {
+  margin-bottom: 16px;
+}
+
+.allocation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 8px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+}
+
+.allocation-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.asset-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.allocation-value {
+  font-weight: 600;
+  color: #667eea;
+  font-size: 1.1em;
+}
+
+.total-allocation {
+  padding-top: 16px;
+  border-top: 2px solid #e0e0e0;
+  text-align: right;
+  color: #333;
+  font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+  .portfolio-content {
+    grid-template-columns: 1fr;
+  }
+}
+

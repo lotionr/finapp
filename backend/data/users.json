@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "age": 35,
+    "current_income": 85000.0,
+    "current_savings": 45000.0,
+    "risk_profile": "moderate",
+    "created_at": "2024-01-15T10:30:00",
+    "updated_at": null
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "age": 28,
+    "current_income": 65000.0,
+    "current_savings": 25000.0,
+    "risk_profile": "aggressive",
+    "created_at": "2024-01-16T14:20:00",
+    "updated_at": null
+  },
+  {
+    "id": 3,
+    "name": "Robert Johnson",
+    "email": "robert.j@example.com",
+    "age": 52,
+    "current_income": 120000.0,
+    "current_savings": 180000.0,
+    "risk_profile": "conservative",
+    "created_at": "2024-01-17T09:15:00",
+    "updated_at": null
+  },
+  {
+    "id": 4,
+    "name": "Naren B",
+    "email": "n_babu@yahoo.com",
+    "age": 24,
+    "current_income": 100000.0,
+    "current_savings": 200000.0,
+    "risk_profile": "moderate",
+    "created_at": "2025-11-13T23:21:02.028750",
+    "updated_at": null
+  },
+  {
+    "id": 5,
+    "name": "lochan r",
+    "email": "lochreddy@yahoo.com",
+    "age": 20,
+    "current_income": 100000.0,
+    "current_savings": 100000.0,
+    "risk_profile": "moderate",
+    "created_at": "2025-11-13T23:39:06.255200",
+    "updated_at": null
+  },
+  {
+    "id": 6,
+    "name": "lochan reddy",
+    "email": "lr@yahoo.com",
+    "age": 20,
+    "current_income": 100000.0,
+    "current_savings": 100000.0,
+    "risk_profile": "moderate",
+    "created_at": "2025-11-13T23:42:30.068479",
+    "updated_at": null
+  },
+  {
+    "id": 7,
+    "name": "lochan RR",
+    "email": "lrs@gmail.com",
+    "age": 20,
+    "current_income": 100000.0,
+    "current_savings": 100000.0,
+    "risk_profile": "moderate",
+    "created_at": "2025-11-13T23:57:33.976263",
+    "updated_at": null
+  }
+]
