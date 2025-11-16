@@ -43,11 +43,11 @@ function App() {
     loadSavedUser();
   }, []);
 
-  const handleLogin = async (email) => {
+  const handleLogin = async (email, password) => {
     setLoading(true);
     setError(null);
     try {
-      const userData = await api.getUserByEmail(email);
+      const userData = await api.login(email, password);
       setUser(userData);
       localStorage.setItem('userId', userData.id);
       setShowLogin(false);

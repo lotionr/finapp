@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from database import get_db, DB
 from models import User, Portfolio, FinancialGoal
 from schemas import (
-    UserCreate, UserResponse,
+    UserCreate, UserResponse, LoginRequest,
     PortfolioCreate, PortfolioResponse, PortfolioUpdate,
     FinancialGoalCreate, FinancialGoalResponse,
     AssetAllocationRequest, AssetAllocationResponse,
@@ -16,6 +16,7 @@ from schemas import (
 from services.portfolio_service import PortfolioService
 from services.plan_service import PlanService
 from services.ml_service import MLService
+from auth import hash_password, verify_password
 
 load_dotenv()
 
@@ -44,9 +45,13 @@ def create_user(user: UserCreate, db: DB = Depends(get_db)):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
     
+    # Hash the password
+    password_hash = hash_password(user.password)
+    
     db_user = User(
         name=user.name,
         email=user.email,
+        password_hash=password_hash,
         age=user.age,
         current_income=user.current_income,
         current_savings=user.current_savings,
@@ -71,6 +76,27 @@ def get_user_by_email(email: str, db: DB = Depends(get_db)):
     user = db.get_user_by_email(email)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+@app.post("/api/auth/login", response_model=UserResponse)
+def login(credentials: LoginRequest, db: DB = Depends(get_db)):
+    """Authenticate user with email and password"""
+    user = db.get_user_by_email(credentials.email)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    # Check if user has a password hash (for backward compatibility with existing users)
+    if not user.password_hash:
+        raise HTTPException(
+            status_code=401, 
+            detail="This account was created before password authentication. Please create a new account or contact support."
+        )
+    
+    # Verify password
+    if not verify_password(credentials.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
     return user
 
 

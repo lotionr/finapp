@@ -7,10 +7,16 @@ from datetime import datetime
 class UserCreate(BaseModel):
     name: str
     email: EmailStr
+    password: str
     age: int
     current_income: float
     current_savings: float
     risk_profile: str  # conservative, moderate, aggressive
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
 
 
 class UserResponse(BaseModel):

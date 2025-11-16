@@ -75,5 +75,27 @@
     },
     "created_at": "2025-11-13T23:57:57.543951",
     "updated_at": null
+  },
+  {
+    "id": 8,
+    "user_id": 8,
+    "allocation": {
+      "stocks": 90.0,
+      "bonds": 5.0,
+      "cash": 5.0
+    },
+    "created_at": "2025-11-16T11:29:11.726023",
+    "updated_at": null
+  },
+  {
+    "id": 9,
+    "user_id": 9,
+    "allocation": {
+      "stocks": 40.0,
+      "bonds": 50.0,
+      "cash": 10.0
+    },
+    "created_at": "2025-11-16T11:53:01.363825",
+    "updated_at": null
   }
 ]

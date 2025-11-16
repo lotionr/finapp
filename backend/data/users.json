@@ -75,5 +75,27 @@
     "risk_profile": "moderate",
     "created_at": "2025-11-13T23:57:33.976263",
     "updated_at": null
+  },
+  {
+    "id": 8,
+    "name": "Lochan Reddy",
+    "email": "reachlochanreddy@gmail.com",
+    "age": 18,
+    "current_income": 50000.0,
+    "current_savings": 0.0,
+    "risk_profile": "aggressive",
+    "created_at": "2025-11-16T11:28:15.448973",
+    "updated_at": null
+  },
+  {
+    "id": 9,
+    "name": "Lochan Reddy",
+    "email": "lochanreddy@gmail.com",
+    "age": 18,
+    "current_income": 50000.0,
+    "current_savings": 6000.0,
+    "risk_profile": "conservative",
+    "created_at": "2025-11-16T11:52:11.004222",
+    "updated_at": null
   }
 ]

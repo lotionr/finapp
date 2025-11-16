@@ -3,6 +3,7 @@ import './LoginScreen.css';
 
 function LoginScreen({ onLogin, onCreateNew, loading }) {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSearch = async (e) => {
@@ -14,10 +15,15 @@ function LoginScreen({ onLogin, onCreateNew, loading }) {
       return;
     }
 
+    if (!password.trim()) {
+      setError('Please enter a password');
+      return;
+    }
+
     try {
-      await onLogin(email.trim());
+      await onLogin(email.trim(), password.trim());
     } catch (err) {
-      setError('User not found. Please check your email or create a new profile.');
+      setError(err.response?.data?.detail || 'Invalid email or password. Please try again or create a new profile.');
     }
   };
 
@@ -30,7 +36,7 @@ function LoginScreen({ onLogin, onCreateNew, loading }) {
         <div className="login-options">
           <div className="login-section">
             <h2>Sign In</h2>
-            <p className="section-description">Enter your email to load your existing profile</p>
+            <p className="section-description">Enter your email and password to sign in</p>
             
             <form onSubmit={handleSearch}>
               <div className="input-group">
@@ -46,14 +52,27 @@ function LoginScreen({ onLogin, onCreateNew, loading }) {
                 />
               </div>
               
+              <div className="input-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  disabled={loading}
+                  required
+                />
+              </div>
+              
               {error && <div className="error-message">{error}</div>}
               
               <button 
                 type="submit" 
                 className="button primary"
-                disabled={loading || !email.trim()}
+                disabled={loading || !email.trim() || !password.trim()}
               >
-                {loading ? 'Loading...' : 'Load Profile'}
+                {loading ? 'Loading...' : 'Sign In'}
               </button>
             </form>
           </div>

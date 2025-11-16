@@ -13,6 +13,7 @@ class User:
         self.id = kwargs.get('id')
         self.name = kwargs.get('name')
         self.email = kwargs.get('email')
+        self.password_hash = kwargs.get('password_hash')
         self.age = kwargs.get('age')
         self.current_income = kwargs.get('current_income')
         self.current_savings = kwargs.get('current_savings')
@@ -25,6 +26,7 @@ class User:
             'id': self.id,
             'name': self.name,
             'email': self.email,
+            'password_hash': self.password_hash,
             'age': self.age,
             'current_income': self.current_income,
             'current_savings': self.current_savings,

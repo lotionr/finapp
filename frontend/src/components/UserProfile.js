@@ -5,6 +5,7 @@ function UserProfile({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    password: '',
     age: '',
     current_income: '',
     current_savings: '',
@@ -54,6 +55,20 @@ function UserProfile({ onSubmit }) {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Choose a secure password"
+            minLength="6"
             required
           />
         </div>

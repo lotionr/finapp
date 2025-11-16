@@ -26,6 +26,11 @@ const apiService = {
     return response.data;
   },
 
+  login: async (email, password) => {
+    const response = await apiClient.post('/api/auth/login', { email, password });
+    return response.data;
+  },
+
   // Portfolio endpoints
   analyzePortfolio: async (requestData) => {
     const response = await apiClient.post('/api/portfolio/analyze', requestData);
