@@ -17,6 +17,7 @@ class User:
         self.age = kwargs.get('age')
         self.current_income = kwargs.get('current_income')
         self.current_savings = kwargs.get('current_savings')
+        self.monthly_savings = kwargs.get('monthly_savings')
         self.risk_profile = kwargs.get('risk_profile')
         self.created_at = kwargs.get('created_at')
         self.updated_at = kwargs.get('updated_at')
@@ -30,6 +31,7 @@ class User:
             'age': self.age,
             'current_income': self.current_income,
             'current_savings': self.current_savings,
+            'monthly_savings': self.monthly_savings,
             'risk_profile': self.risk_profile,
             'created_at': self.created_at,
             'updated_at': self.updated_at

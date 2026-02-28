@@ -9,6 +9,7 @@ function UserProfile({ onSubmit }) {
     age: '',
     current_income: '',
     current_savings: '',
+    monthly_savings: '',
     risk_profile: 'moderate'
   });
 
@@ -25,7 +26,8 @@ function UserProfile({ onSubmit }) {
       ...formData,
       age: parseInt(formData.age),
       current_income: parseFloat(formData.current_income),
-      current_savings: parseFloat(formData.current_savings)
+      current_savings: parseFloat(formData.current_savings),
+      monthly_savings: parseFloat(formData.monthly_savings),
     });
   };
 
@@ -111,6 +113,21 @@ function UserProfile({ onSubmit }) {
             onChange={handleChange}
             min="0"
             step="1000"
+            required
+          />
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="monthly_savings">Monthly Savings ($)</label>
+          <input
+            type="number"
+            id="monthly_savings"
+            name="monthly_savings"
+            value={formData.monthly_savings}
+            onChange={handleChange}
+            min="0"
+            step="100"
+            placeholder="How much you save each month"
             required
           />
         </div>

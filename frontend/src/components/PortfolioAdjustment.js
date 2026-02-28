@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './PortfolioAdjustment.css';
 
-function PortfolioAdjustment({ user, portfolio, onAnalyze, onUpdate, loading = false }) {
-  const [goals, setGoals] = useState([
-    { goal_name: '', target_amount: '', target_date: '', priority: 'medium' }
-  ]);
-  const [timeHorizon, setTimeHorizon] = useState(10);
+const toDisplayGoal = (g) => ({
+  goal_name: g.goal_name,
+  target_amount: g.target_amount,
+  target_date: g.target_date,
+  priority: g.priority,
+});
+
+function PortfolioAdjustment({ user, portfolio, initialGoals, onAnalyze, onUpdate, loading = false }) {
+  const [goals, setGoals] = useState(
+    initialGoals && initialGoals.length > 0
+      ? initialGoals.map(toDisplayGoal)
+      : [{ goal_name: '', target_amount: '', target_date: '', priority: 'medium' }]
+  );
   const [allocation, setAllocation] = useState(
     portfolio?.allocation || { stocks: 0, bonds: 0, cash: 0 }
   );
@@ -16,6 +24,12 @@ function PortfolioAdjustment({ user, portfolio, onAnalyze, onUpdate, loading = f
       setAllocation(portfolio.allocation);
     }
   }, [portfolio]);
+
+  useEffect(() => {
+    if (initialGoals && initialGoals.length > 0) {
+      setGoals(initialGoals.map(toDisplayGoal));
+    }
+  }, [initialGoals]);
 
   const handleGoalChange = (index, field, value) => {
     const newGoals = [...goals];
@@ -51,8 +65,7 @@ function PortfolioAdjustment({ user, portfolio, onAnalyze, onUpdate, loading = f
       return;
     }
     
-    console.log('Calling onAnalyze with:', { goals: validGoals, timeHorizon });
-    onAnalyze(validGoals, timeHorizon);
+    onAnalyze(validGoals);
   };
 
   const handleManualUpdate = () => {
@@ -87,19 +100,6 @@ function PortfolioAdjustment({ user, portfolio, onAnalyze, onUpdate, loading = f
 
       {mode === 'analyze' ? (
         <div className="analyze-mode">
-          <div className="input-group">
-            <label htmlFor="time_horizon">Time Horizon (years)</label>
-            <input
-              type="number"
-              id="time_horizon"
-              value={timeHorizon}
-              onChange={(e) => setTimeHorizon(parseInt(e.target.value))}
-              min="1"
-              max="50"
-              required
-            />
-          </div>
-
           <div className="goals-section">
             <h3>Financial Goals</h3>
             {goals.map((goal, index) => (

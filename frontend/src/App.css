@@ -23,10 +23,15 @@
   opacity: 0.9;
 }
 
-.logout-button {
+.header-actions {
   position: absolute;
   top: 20px;
   right: 20px;
+  display: flex;
+  gap: 8px;
+}
+
+.header-btn {
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -37,8 +42,8 @@
   transition: background 0.3s;
 }
 
-.logout-button:hover {
-  background: rgba(255, 255, 255, 0.3);
+.header-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .container {
@@ -47,23 +52,6 @@
   padding: 30px 20px;
 }
 
-.user-info {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.user-info h2 {
-  margin: 0 0 10px 0;
-  color: #333;
-}
-
-.user-info p {
-  margin: 0;
-  color: #666;
-}
 
 .error-message {
   background-color: #f8d7da;

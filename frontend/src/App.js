@@ -5,12 +5,22 @@ import UserProfile from './components/UserProfile';
 import PortfolioDisplay from './components/PortfolioDisplay';
 import PortfolioAdjustment from './components/PortfolioAdjustment';
 import FinancialPlan from './components/FinancialPlan';
+import GoalFeasibility from './components/GoalFeasibility';
+import ProjectionChart from './components/ProjectionChart';
+import AllocationBreakdown from './components/AllocationBreakdown';
+import EditProfile from './components/EditProfile';
 import { api } from './services/api';
 
 function App() {
   const [user, setUser] = useState(null);
   const [portfolio, setPortfolio] = useState(null);
   const [financialPlan, setFinancialPlan] = useState(null);
+  const [goalFeasibility, setGoalFeasibility] = useState(null);
+  const [expectedReturn, setExpectedReturn] = useState(null);
+  const [projection, setProjection] = useState(null);
+  const [goalAllocationBreakdown, setGoalAllocationBreakdown] = useState(null);
+  const [savedGoals, setSavedGoals] = useState(null);
+  const [showEditProfile, setShowEditProfile] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showLogin, setShowLogin] = useState(true);
@@ -92,12 +102,34 @@ function App() {
     setUser(null);
     setPortfolio(null);
     setFinancialPlan(null);
+    setGoalFeasibility(null);
+    setExpectedReturn(null);
+    setProjection(null);
+    setGoalAllocationBreakdown(null);
+    setSavedGoals(null);
     setShowLogin(true);
     setShowCreateProfile(false);
     setError(null);
   };
 
-  const handlePortfolioAnalyze = async (goals, timeHorizon) => {
+  const handleUserUpdate = async (updatedData) => {
+    setError(null);
+    try {
+      const updatedUser = await api.updateUser(user.id, updatedData);
+      setUser(updatedUser);
+      setShowEditProfile(false);
+
+      // Re-run full analysis with updated profile so all charts and
+      // feasibility cards reflect the new income, savings, risk profile, etc.
+      if (savedGoals && savedGoals.length > 0) {
+        await handlePortfolioAnalyze(savedGoals);
+      }
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message || 'Failed to update profile');
+    }
+  };
+
+  const handlePortfolioAnalyze = async (goals) => {
     if (!user) {
       setError('Please create a user profile first');
       return;
@@ -114,16 +146,20 @@ function App() {
         priority: goal.priority
       }));
 
-      console.log('Analyzing portfolio with:', { user_id: user.id, goals: formattedGoals, time_horizon: timeHorizon });
-      
       const allocation = await api.analyzePortfolio({
         user_id: user.id,
         goals: formattedGoals,
-        time_horizon: timeHorizon
       });
-      
-      console.log('Allocation received:', allocation);
-      
+
+      // Persist goals so downstream components don't need to re-enter them
+      setSavedGoals(formattedGoals);
+
+      // Store feasibility, projection, and breakdown results
+      setGoalFeasibility(allocation.goal_feasibility || []);
+      setExpectedReturn(allocation.expected_return || null);
+      setProjection(allocation.projection || []);
+      setGoalAllocationBreakdown(allocation.goal_allocation_breakdown || []);
+
       // Update or create portfolio
       const portfolioData = await api.updatePortfolio(user.id, {
         allocation: allocation.allocation
@@ -150,6 +186,18 @@ function App() {
         allocation: newAllocation
       });
       setPortfolio(updatedPortfolio);
+
+      // If we have saved goals, recompute feasibility against the new allocation
+      if (savedGoals && savedGoals.length > 0) {
+        const feasibility = await api.computeFeasibility({
+          user_id: user.id,
+          allocation: newAllocation,
+          goals: savedGoals,
+        });
+        setGoalFeasibility(feasibility.goal_feasibility || []);
+        setExpectedReturn(feasibility.expected_return || null);
+        setProjection(feasibility.projection || []);
+      }
     } catch (err) {
       setError(err.message || 'Failed to update portfolio');
     } finally {
@@ -165,9 +213,17 @@ function App() {
     setLoading(true);
     setError(null);
     try {
+      // Ensure every goal carries user_id and numeric target_amount
+      const formattedGoals = goals.map(g => ({
+        user_id: user.id,
+        goal_name: g.goal_name,
+        target_amount: parseFloat(g.target_amount) || 0,
+        target_date: g.target_date,
+        priority: g.priority,
+      }));
       const plan = await api.generatePlan({
         user_id: user.id,
-        goals: goals
+        goals: formattedGoals,
       });
       setFinancialPlan(plan.summary);
     } catch (err) {
@@ -194,13 +250,14 @@ function App() {
         <h1>Financial Planning Application</h1>
         <p>Asset Allocation & Portfolio Management</p>
         {user && (
-          <button 
-            className="logout-button"
-            onClick={handleLogout}
-            title="Sign out and return to login"
-          >
-            Sign Out
-          </button>
+          <div className="header-actions">
+            <button className="header-btn" onClick={() => setShowEditProfile(true)}>
+              Edit Profile
+            </button>
+            <button className="header-btn" onClick={handleLogout}>
+              Sign Out
+            </button>
+          </div>
         )}
       </header>
 
@@ -211,16 +268,18 @@ function App() {
 
         {showCreateProfile ? (
           <UserProfile onSubmit={handleUserCreate} />
+        ) : showEditProfile && user ? (
+          <EditProfile
+            user={user}
+            onSave={handleUserUpdate}
+            onCancel={() => setShowEditProfile(false)}
+          />
         ) : user ? (
           <>
-            <div className="user-info">
-              <h2>Welcome, {user.name}!</h2>
-              <p>Email: {user.email} | Risk Profile: {user.risk_profile} | Age: {user.age} | Savings: ${user.current_savings.toLocaleString()}</p>
-            </div>
-
             {!portfolio ? (
               <PortfolioAdjustment
                 user={user}
+                initialGoals={savedGoals}
                 onAnalyze={handlePortfolioAnalyze}
                 onUpdate={handlePortfolioUpdate}
                 loading={loading}
@@ -228,9 +287,28 @@ function App() {
             ) : (
               <>
                 <PortfolioDisplay portfolio={portfolio} />
+                {goalAllocationBreakdown && goalAllocationBreakdown.length > 0 && (
+                  <AllocationBreakdown
+                    breakdown={goalAllocationBreakdown}
+                    blendedAllocation={portfolio?.allocation}
+                  />
+                )}
+                {goalFeasibility && goalFeasibility.length > 0 && (
+                  <GoalFeasibility
+                    feasibility={goalFeasibility}
+                    expectedReturn={expectedReturn}
+                  />
+                )}
+                {projection && projection.length > 0 && (
+                  <ProjectionChart
+                    projection={projection}
+                    feasibility={goalFeasibility}
+                  />
+                )}
                 <PortfolioAdjustment
                   user={user}
                   portfolio={portfolio}
+                  initialGoals={savedGoals}
                   onAnalyze={handlePortfolioAnalyze}
                   onUpdate={handlePortfolioUpdate}
                   loading={loading}
@@ -238,6 +316,7 @@ function App() {
                 <FinancialPlan
                   user={user}
                   portfolio={portfolio}
+                  initialGoals={savedGoals}
                   onGenerate={handleGeneratePlan}
                   plan={financialPlan}
                 />

@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './FinancialPlan.css';
 
-function FinancialPlan({ user, portfolio, onGenerate, plan }) {
-  const [goals, setGoals] = useState([
-    { goal_name: '', target_amount: '', target_date: '', priority: 'medium' }
-  ]);
+const toDisplayGoal = (g) => ({
+  goal_name: g.goal_name,
+  target_amount: g.target_amount,
+  target_date: g.target_date,
+  priority: g.priority,
+});
+
+function FinancialPlan({ user, portfolio, initialGoals, onGenerate, plan }) {
+  const [goals, setGoals] = useState(
+    initialGoals && initialGoals.length > 0
+      ? initialGoals.map(toDisplayGoal)
+      : [{ goal_name: '', target_amount: '', target_date: '', priority: 'medium' }]
+  );
   const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    if (initialGoals && initialGoals.length > 0) {
+      setGoals(initialGoals.map(toDisplayGoal));
+    }
+  }, [initialGoals]);
 
   const handleGoalChange = (index, field, value) => {
     const newGoals = [...goals];
@@ -41,6 +56,12 @@ function FinancialPlan({ user, portfolio, onGenerate, plan }) {
           <p className="description">
             Generate a comprehensive financial plan based on your profile and portfolio allocation.
           </p>
+
+          {initialGoals && initialGoals.length > 0 && (
+            <div className="goals-carried-over">
+              Goals carried over from your portfolio analysis — edit if needed.
+            </div>
+          )}
 
           <div className="goals-section">
             <h3>Financial Goals</h3>

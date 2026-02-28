@@ -18,6 +18,25 @@
   padding-top: 20px;
 }
 
+.goals-carried-over {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ebf8ff;
+  border: 1px solid #90cdf4;
+  color: #2b6cb0;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.9em;
+  margin-bottom: 20px;
+}
+
+.goals-carried-over::before {
+  content: '✓';
+  font-weight: 700;
+  font-size: 1em;
+}
+
 .goals-section {
   margin-bottom: 24px;
 }

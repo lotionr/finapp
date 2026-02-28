@@ -1,0 +1,190 @@
+.goal-feasibility {
+  margin-bottom: 30px;
+}
+
+.goal-feasibility h2 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.8em;
+}
+
+.feasibility-subtitle {
+  color: #666;
+  margin: 0 0 24px 0;
+  font-size: 0.95em;
+}
+
+.feasibility-warning {
+  background: #fffbeb;
+  border: 1px solid #f6ad55;
+  color: #92400e;
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+.goal-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.goal-card {
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  padding: 20px;
+  background: #fafafa;
+}
+
+.goal-card.on-track {
+  border-color: #48bb78;
+  background: #f0fff4;
+}
+
+.goal-card.off-track {
+  border-color: #f56565;
+  background: #fff5f5;
+}
+
+.goal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.goal-card-header h3 {
+  margin: 0;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.82em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.badge-success {
+  background: #48bb78;
+  color: #fff;
+}
+
+.badge-danger {
+  background: #f56565;
+  color: #fff;
+}
+
+.goal-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.goal-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.goal-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 0.78em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: #333;
+}
+
+.stat-note {
+  font-size: 0.78em;
+  color: #888;
+}
+
+.text-success {
+  color: #276749;
+}
+
+.text-danger {
+  color: #c53030;
+}
+
+/* Progress bar */
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88em;
+  font-weight: 500;
+  color: #555;
+}
+
+.progress-bar-track {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.fill-success {
+  background: #48bb78;
+}
+
+.fill-danger {
+  background: #f56565;
+}
+
+.progress-pct {
+  font-size: 0.78em;
+  color: #888;
+  text-align: right;
+}
+
+/* Bottom row */
+.goal-bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.surplus-box,
+.savings-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+@media (max-width: 600px) {
+  .goal-stat-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .goal-bottom-row {
+    grid-template-columns: 1fr;
+  }
+}

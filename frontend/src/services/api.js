@@ -21,6 +21,11 @@ const apiService = {
     return response.data;
   },
 
+  updateUser: async (userId, userData) => {
+    const response = await apiClient.put(`/api/users/${userId}`, userData);
+    return response.data;
+  },
+
   getUserByEmail: async (email) => {
     const response = await apiClient.get(`/api/users/email/${encodeURIComponent(email)}`);
     return response.data;
@@ -44,6 +49,11 @@ const apiService = {
 
   updatePortfolio: async (userId, portfolioData) => {
     const response = await apiClient.put(`/api/portfolio/${userId}`, portfolioData);
+    return response.data;
+  },
+
+  computeFeasibility: async (requestData) => {
+    const response = await apiClient.post('/api/portfolio/feasibility', requestData);
     return response.data;
   },
 

@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 from database import get_db, DB
 from models import User, Portfolio, FinancialGoal
 from schemas import (
-    UserCreate, UserResponse, LoginRequest,
+    UserCreate, UserUpdate, UserResponse, LoginRequest,
     PortfolioCreate, PortfolioResponse, PortfolioUpdate,
     FinancialGoalCreate, FinancialGoalResponse,
     AssetAllocationRequest, AssetAllocationResponse,
+    FeasibilityRequest, FeasibilityResponse,
     FinancialPlanRequest, FinancialPlanResponse
 )
 from services.portfolio_service import PortfolioService
@@ -70,6 +71,30 @@ def get_user(user_id: int, db: DB = Depends(get_db)):
     return user
 
 
+@app.put("/api/users/{user_id}", response_model=UserResponse)
+def update_user(user_id: int, update: UserUpdate, db: DB = Depends(get_db)):
+    """Update user profile (email and password are not changed here)"""
+    existing = db.get_user(user_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    updated = User(
+        name=update.name,
+        age=update.age,
+        email=existing.email,
+        password_hash=existing.password_hash,
+        current_income=update.current_income,
+        current_savings=update.current_savings,
+        monthly_savings=update.monthly_savings,
+        risk_profile=update.risk_profile,
+        created_at=existing.created_at,
+    )
+    result = db.update_user(user_id, updated)
+    if not result:
+        raise HTTPException(status_code=500, detail="Failed to update user")
+    return result
+
+
 @app.get("/api/users/email/{email}", response_model=UserResponse)
 def get_user_by_email(email: str, db: DB = Depends(get_db)):
     """Get user profile by email"""
@@ -117,6 +142,28 @@ def analyze_portfolio(request: AssetAllocationRequest, db: DB = Depends(get_db))
     )
     
     return allocation
+
+
+@app.post("/api/portfolio/feasibility", response_model=FeasibilityResponse)
+def compute_feasibility(request: FeasibilityRequest, db: DB = Depends(get_db)):
+    """Recompute goal feasibility and projection for a given allocation without changing the stored portfolio"""
+    user = db.get_user(request.user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    alloc = request.allocation
+    expected_return = (
+        alloc.get("stocks", 0) * 0.08 +
+        alloc.get("bonds",  0) * 0.04 +
+        alloc.get("cash",   0) * 0.02
+    ) / 100
+
+    portfolio_service = PortfolioService()
+    return {
+        "expected_return": round(expected_return, 4),
+        "goal_feasibility": portfolio_service._compute_goal_feasibility(user, request.goals, expected_return),
+        "projection":       portfolio_service._compute_projection(user, request.goals, expected_return),
+    }
 
 
 @app.get("/api/portfolio/{user_id}", response_model=PortfolioResponse)
